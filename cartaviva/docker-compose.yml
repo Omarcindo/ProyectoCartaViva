@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:16
+    container_name: cartaviva_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: rootpassword
+      POSTGRES_DB: cartaviva
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
