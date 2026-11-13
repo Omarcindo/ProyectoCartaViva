@@ -1,0 +1,36 @@
+# ==========================================
+# CartaViva — .gitignore oficial
+# ==========================================
+
+# Dependencias y builds
+node_modules/
+dist/
+build/
+.vite/
+
+# Variables de entorno y secretos (NUNCA subir a GitHub)
+.env
+.env.local
+.env.production
+*.pem
+*.key
+*.crt
+
+# Logs y archivos temporales
+logs/
+*.log
+npm-debug.log*
+
+# Base de datos local, backups y archivos subidos por usuarios
+*.sqlite
+*.db
+*.sql.gz
+*.tar.gz
+uploads/
+certbot/
+
+# Sistema operativo y editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
