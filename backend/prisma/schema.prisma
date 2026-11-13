@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Restaurante {
+  id         Int        @id @default(autoincrement())
+  nombre     String
+  logo       String?
+  iva        Float      @default(21.0)
+  colores    String?
+  usuarios   Usuario[]
+  zonas      Zona[]
+  mesas      Mesa[]
+  categorias Categoria[]
+  productos  Producto[]
+  pedidos    Pedido[]
+  tickets    Ticket[]
+}
+
+model Usuario {
+  id             Int         @id @default(autoincrement())
+  restaurante_id Int
+  restaurante    Restaurante @relation(fields: [restaurante_id], references: [id])
+  nombre         String
+  email          String      @unique
+  password       String
+  rol            String      // plataforma, dueño, camarero, cocina
+}
+
+model Zona {
+  id             Int         @id @default(autoincrement())
+  restaurante_id Int
+  restaurante    Restaurante @relation(fields: [restaurante_id], references: [id])
+  nombre         String      // Interior, terraza, barra
+  mesas          Mesa[]
+}
+
+model Mesa {
+  id             Int         @id @default(autoincrement())
+  restaurante_id Int
+  restaurante    Restaurante @relation(fields: [restaurante_id], references: [id])
+  zona_id        Int
+  zona           Zona        @relation(fields: [zona_id], references: [id])
+  numero         Int
+  pos_x          Float
+  pos_y          Float
+  forma          String      // redonda, cuadrada
+  sillas         Int
+  token_qr       String      @unique
+  pedidos        Pedido[]
+}
+
+model Categoria {
+  id             Int         @id @default(autoincrement())
+  restaurante_id Int
+  restaurante    Restaurante @relation(fields: [restaurante_id], references: [id])
+  nombre         String
+  productos      Producto[]
+}
+
+model Producto {
+  id             Int         @id @default(autoincrement())
+  restaurante_id Int
+  restaurante    Restaurante @relation(fields: [restaurante_id], references: [id])
+  categoria_id   Int
+  categoria      Categoria   @relation(fields: [categoria_id], references: [id])
+  nombre         String
+  precio         Float
+  alergenos      String[]
+  imagen         String?
+  disponible     Boolean     @default(true)
+}
+
+model Pedido {
+  id             Int            @id @default(autoincrement())
+  restaurante_id Int
+  restaurante    Restaurante    @relation(fields: [restaurante_id], references: [id])
+  mesa_id        Int
+  mesa           Mesa           @relation(fields: [mesa_id], references: [id])
+  estado         String         // pendiente, preparando, listo, servido
+  creado_en      DateTime       @default(now())
+  lineas         LineaPedido[]
+}
+
+model LineaPedido {
+  id             Int         @id @default(autoincrement())
+  pedido_id      Int
+  pedido         Pedido      @relation(fields: [pedido_id], references: [id])
+  producto_id    Int
+  cantidad       Int
+  precio_snapshot Float      // Precio guardado al momento de pedir
+}
+
+model Ticket {
+  id             Int         @id @default(autoincrement())
+  restaurante_id Int
+  restaurante    Restaurante @relation(fields: [restaurante_id], references: [id])
+  mesa_id        Int
+  total          Float
+  pagado_en      DateTime    @default(now())
+}

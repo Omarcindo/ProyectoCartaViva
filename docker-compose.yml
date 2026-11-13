@@ -1,7 +1,3 @@
-# =========================================================================
-#  CartaViva, S.L. — Arquitectura de Servicios Contenerizados (VPS)
-#  Incluye: Proxy SSL, Web, Backend, Base de Datos, Caché y Monitorización 24/7
-# =========================================================================
 
 services:
   # 1) PUERTA DE ENLACE Y REVERSE PROXY (Nginx)
@@ -70,6 +66,8 @@ services:
       POSTGRES_USER: ${DB_USER:-cartaviva}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-cartaviva_secret}
       POSTGRES_DB: ${DB_NAME:-cartaviva_db}
+    ports:
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./docs/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
